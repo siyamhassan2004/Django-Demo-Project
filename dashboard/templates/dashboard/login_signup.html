@@ -137,8 +137,12 @@
     <form id="registerForm" method="POST" action="{% url 'register' %}" style="display: none;">
       {% csrf_token %}
       <div class="input-group">
-        <label>Full Name</label>
-        <input type="text" name="name" required />
+        <label>First Name</label>
+        <input type="text" name="fname" required />
+      </div>
+      <div class="input-group">
+        <label>Last Name</label>
+        <input type="text" name="lname" required />
       </div>
       <div class="input-group">
         <label>Email</label>

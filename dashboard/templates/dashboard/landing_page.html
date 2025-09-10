@@ -68,7 +68,7 @@
 <div class="page">
 
   <!-- Composer: centered at top -->
-  <form id="loginForm" method="POST" action="{% url 'add_post' %}" class="card composer">
+  <form id="postForm" method="POST" action="{% url 'add_post' %}" class="card composer">
     {% csrf_token %}
     <div class="input-group">
       <label>What's on your mind?</label>
