@@ -34,15 +34,14 @@ def register(request):
             R_confirm_password = request.POST.get("confirm_password")
             
             if R_password != R_confirm_password:
-                messages.error(request,"Password and Confirm Password do not match.")
-                return redirect("register")
+                return HttpResponse("<h1>Password and Confirm Password do not match.</h1>")
+
             if Login_info_new_p.objects.filter(email=R_email).exists():
-                messages.error(request,"Email already exists.")
-                return redirect("register")
+                return HttpResponse("<h1>Email already exists.</h1>")
+
             else:
                 new_user = Login_info_new_p.objects.create(fname=R_fname,lname=R_lname,email=R_email,password=R_password)
                 new_user.save()
-                messages.success(request,"Registration Successful. Please Login.")
                 return redirect("login")
 
 def profile(request):
