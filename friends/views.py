@@ -34,11 +34,6 @@ def allFriends(request):
     return render(request,"friends/friend_list.html",{"friends":friends_data,"my_id":friendships,"user_data":user_data})
 
 def friend_req(request,u_id):
-    # my_id = request.session.get('user_id')
-    # user = Login_info_new_p.objects.get(id=my_id)
-    # friend = Login_info_new_p.objects.get(id=u_id)
-    # f_list = friend_list(user_id=user,friend_id=friend)
-    # f_list.save()
     my_id = request.session.get('user_id')
     if not my_id:
         return redirect('login')  # adjust to your auth
@@ -70,16 +65,6 @@ def friend_req(request,u_id):
     messages.success(request, "Friend request sent.")
     return redirect('friends')
 
-# def friends_page(request):
-#     my_id = request.session.get('user_id')
-#     friends = friend_list.objects.filter(user_id_id=my_id).select_related('friend_id')
-#     pending_requests = friend_request.objects.filter(receiver_id_id=my_id, status="pending")
-
-#     return render(request, "friends/pending_req.html", {
-#         "friends": [f.friend_id for f in friends],
-#         "user_data": {...},   # your suggestions logic
-#         "pending_requests": pending_requests
-#     })
 
 from django.shortcuts import render, get_object_or_404, redirect
 from django.db import models, transaction
