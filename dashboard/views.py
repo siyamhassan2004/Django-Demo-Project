@@ -6,6 +6,9 @@ from django.contrib.auth import logout,authenticate
 from .forms import UserPostsForm
 # Create your views here.
 def demo(request):
+    if not request.session.get('user_id'):
+        return redirect("login")
+    
     posts = User_posts.objects.all().order_by('-create_at')
     users = []
     U_posts = []
