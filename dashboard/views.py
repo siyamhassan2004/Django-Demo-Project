@@ -1,14 +1,11 @@
 from django.shortcuts import render,redirect
 from django.http import HttpResponse
-from .models import Login_info_new_p,User_posts
+from .models import Login_info_new_p,User_posts,User_comment
 from django.contrib import messages
 from django.contrib.auth import logout,authenticate
 from .forms import UserPostsForm
 # Create your views here.
 def demo(request):
-    if not request.session.get('user_id'):
-        return redirect("login")
-    
     posts = User_posts.objects.all().order_by('-create_at')
     users = []
     U_posts = []
@@ -44,18 +41,24 @@ def register(request):
                 new_user.save()
                 return redirect("login")
 
-def profile(request):
-    S_email = request.session.get('email')
-    log_user = Login_info_new_p.objects.get(email=S_email)
-    u_name = log_user.fname + log_user.lname
-    posts = User_posts.objects.filter(u_name=log_user)
-    user_names_post = {}
-    for post in posts:
-        user_names_post[u_name] = post.post
-    
-    # posts = [] #what is this doing?
-    return render(request,"dashboard/landing_page.html",{"posts": user_names_post})
+from django.shortcuts import render, get_object_or_404
+from .models import Login_info_new_p, User_posts
 
+def profile(request):
+    # Get user email from session
+    s_email = request.session.get('email')
+    if not s_email:
+        return render(request, "dashboard/landing_page.html", {"posts": []})
+    
+    log_user = get_object_or_404(Login_info_new_p, email=s_email)
+    
+    posts = User_posts.objects.filter(u_name=log_user).select_related('u_name')
+    
+    post_data = [
+        (f"{log_user.fname} {log_user.lname}", post.post)
+        for post in posts
+    ]
+    return render(request, "dashboard/landing_page.html", {"posts": post_data})
 
 def login(request):
     if request.session.get('user_id'):
@@ -95,3 +98,8 @@ def add_post(request):
     else:
         form = UserPostsForm()
     return HttpResponse("Post Was not Added.")
+
+def add_comment(request):
+    # return HttpResponse("Comment Added Successfully.")
+    return redirect("mypost")
+

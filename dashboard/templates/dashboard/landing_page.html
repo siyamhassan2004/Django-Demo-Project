@@ -89,7 +89,7 @@
         <p class="content">{{ post }}</p>
         <div class="actions">
           <button class="like-btn">👍 Like</button>
-          <button class="comment-btn">💬 Comment</button>
+          <a class="comment-btn" href="{% url 'add_comment' %}">💬 Comment</a>
         </div>
       </div>
     {% endfor %}

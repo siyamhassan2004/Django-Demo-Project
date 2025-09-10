@@ -22,3 +22,14 @@ class User_posts(models.Model):
     
     def __str__(self):
         return str(self.u_name)
+    
+    
+class User_comment(models.Model):
+    id = models.AutoField(primary_key=True)
+    post = models.ForeignKey(User_posts, on_delete=models.CASCADE, related_name="comments")
+    user = models.ForeignKey(Login_info_new_p, on_delete=models.CASCADE, related_name="comments")
+    comment = models.CharField(max_length=200)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return str(self.comment)
