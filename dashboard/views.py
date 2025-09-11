@@ -2,8 +2,10 @@ from django.shortcuts import render,redirect
 from django.http import HttpResponse
 from .models import Login_info_new_p,User_posts,User_comment
 from django.contrib import messages
-from django.contrib.auth import logout,authenticate
+from django.contrib.auth import logout
 from .forms import UserPostsForm
+from django.shortcuts import render, get_object_or_404
+
 # Create your views here.
 def demo(request):
     posts = User_posts.objects.all().order_by('-create_at')
@@ -33,18 +35,20 @@ def register(request):
             R_confirm_password = request.POST.get("confirm_password")
             
             if R_password != R_confirm_password:
-                return HttpResponse("<h1>Password and Confirm Password do not match.</h1>")
+                messages.error(request,"Password does not match")
+                return redirect("register")
 
             if Login_info_new_p.objects.filter(email=R_email).exists():
-                return HttpResponse("<h1>Email already exists.</h1>")
+                messages.error(request,"Email already exits")
+                return redirect("register")
 
             else:
                 new_user = Login_info_new_p.objects.create(fname=R_fname,lname=R_lname,email=R_email,password=R_password)
                 new_user.save()
+                messages.success(request,"Account Created.")
                 return redirect("login")
+        return render(request,"dashboard/login_signup.html",{})
 
-from django.shortcuts import render, get_object_or_404
-from .models import Login_info_new_p, User_posts
 
 def profile(request):
     # Get user email from session

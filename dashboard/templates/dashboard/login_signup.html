@@ -160,6 +160,15 @@
     <!-- Register Form -->
     <form id="registerForm" method="POST" action="{% url 'register' %}" style="display: none;">
       {% csrf_token %}
+      {% if messages %}
+      <ul class="messages">
+        {% for message in messages %}
+        <li {% if message.tags %} class="{{ message.tags }}" {% endif %}>
+          {{ message }}
+        </li>
+        {% endfor %}
+      </ul>
+      {% endif %}
       <div class="input-group">
         <label>First Name</label>
         <input type="text" name="fname" required />
