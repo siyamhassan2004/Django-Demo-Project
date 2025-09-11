@@ -1,107 +1,108 @@
 {% include 'dashboard/header.html' %}
 
 {% block extra_css %}
-    <style>
-        .post-card {
-            background: #f0f0f0;
-            padding: 1.5rem;
-            border-radius: 12px;
-            box-shadow: 5px 5px 15px #d1d1d1, -5px -5px 15px #ffffff;
-            max-width: 700px;
-            margin: 1.5rem auto;
-        }
+<style>
+    .post-card {
+        background: #f0f0f0;
+        padding: 1.5rem;
+        border-radius: 12px;
+        box-shadow: 5px 5px 15px #d1d1d1, -5px -5px 15px #ffffff;
+        max-width: 700px;
+        margin: 1.5rem auto;
+    }
 
-        .username {
-            font-size: 1.1rem;
-            font-weight: 700;
-            margin-bottom: 0.3rem;
-            color: #222;
-        }
+    .content {
+        font-size: 1.1rem;
+        font-weight: 700;
+        margin-bottom: 0.3rem;
+        color: #222;
+    }
 
-        .content {
-            font-size: 0.95rem;
-            color: #444;
-            line-height: 1.4;
-        }
+    .username {
+        font-size: 0.95rem;
+        color: #444;
+        line-height: 1.4;
+    }
 
-        .comment-container {
-            max-width: 750px;
-            margin: 2rem auto;
-            padding: 0 1rem;
-            padding-bottom: 120px; /* Reserve space for fixed input */
-        }
+    .comment-container {
+        max-width: 750px;
+        margin: 2rem auto;
+        padding: 0 1rem;
+        padding-bottom: 120px;
+        /* Reserve space for fixed input */
+    }
 
-        .comment-section-title {
-            font-size: 1.3rem;
-            font-weight: 600;
-            margin: 2rem 0 1rem 0;
-            text-align: left;
-            color: #333;
-        }
+    .comment-section-title {
+        font-size: 1.3rem;
+        font-weight: 600;
+        margin: 2rem 0 1rem 0;
+        text-align: left;
+        color: #333;
+    }
 
-        /* Fixed Comment Form */
-        .form {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #f0f0f0;
-            padding: 1rem;
-            border-radius: 12px;
-            box-shadow: 5px 5px 15px #d1d1d1, -5px -5px 15px #ffffff;
-            max-width: 700px;
-            width: 90%;
-            z-index: 9999;
-            display: flex;
-            gap: 0.5rem;
-            align-items: center;
-        }
+    /* Fixed Comment Form */
+    .form {
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #f0f0f0;
+        padding: 1rem;
+        border-radius: 12px;
+        box-shadow: 5px 5px 15px #d1d1d1, -5px -5px 15px #ffffff;
+        max-width: 700px;
+        width: 90%;
+        z-index: 9999;
+        display: flex;
+        gap: 0.5rem;
+        align-items: center;
+    }
 
-        .form textarea {
-            flex: 1;
-            padding: 0.8rem;
-            border-radius: 8px;
-            border: none;
-            resize: none;
-            box-shadow: inset 2px 2px 6px #d1d1d1, inset -2px -2px 6px #ffffff;
-            font-size: 0.95rem;
-            outline: none;
-        }
+    .form textarea {
+        flex: 1;
+        padding: 0.8rem;
+        border-radius: 8px;
+        border: none;
+        resize: none;
+        box-shadow: inset 2px 2px 6px #d1d1d1, inset -2px -2px 6px #ffffff;
+        font-size: 0.95rem;
+        outline: none;
+    }
 
-        .form button {
-            background: #e0e0e0;
-            border: none;
-            padding: 0.6rem 1.4rem;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            box-shadow: 3px 3px 8px #bfbfbf, -3px -3px 8px #ffffff;
-            transition: all 0.2s ease-in-out;
-        }
+    .form button {
+        background: #e0e0e0;
+        border: none;
+        padding: 0.6rem 1.4rem;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        box-shadow: 3px 3px 8px #bfbfbf, -3px -3px 8px #ffffff;
+        transition: all 0.2s ease-in-out;
+    }
 
-        .form button:hover {
-            box-shadow: inset 3px 3px 8px #bfbfbf, inset -3px -3px 8px #ffffff;
-        }
-    </style>
+    .form button:hover {
+        box-shadow: inset 3px 3px 8px #bfbfbf, inset -3px -3px 8px #ffffff;
+    }
+</style>
 {% endblock %}
 
 <div class="comment-container">
 
     <!-- Post -->
     <div class="post-card">
-        <h3 class="username">{{ post.u_name }}</h3>
-        <p class="content">{{ post.post }}</p>
+        <h3 class="content">{{ post.post }}</h3>
+        <p class="username">{{ post.u_name }}</p>
     </div>
 
     <!-- Comments -->
     <h4 class="comment-section-title">Comments</h4>
     {% for comment in comments %}
-        <div class="post-card">
-            <h3 class="username">{{ comment.user }}</h3>
-            <p class="content">{{ comment.comment }}</p>
-        </div>
+    <div class="post-card">
+        <h3 class="content">{{ comment.comment }}</h3>
+        <p class="username">{{ comment.user }}</p>
+    </div>
     {% empty %}
-        <p class="content">No comments yet. Be the first to comment!</p>
+    <p class="content">No comments yet. Be the first to comment!</p>
     {% endfor %}
 
 </div>
@@ -111,7 +112,7 @@
     <form method="POST" action="{% url 'add_comment' post.id %}" style="display: flex; width: 100%; gap: 0.5rem;">
         {% csrf_token %}
         <textarea name="comment" rows="2" placeholder="Add your comment here..." required></textarea>
-        <button type="submit">Submit</button>
+        <button type="submit">📨 Submit</button>
     </form>
 </div>
 

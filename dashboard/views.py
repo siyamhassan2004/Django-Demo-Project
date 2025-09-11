@@ -77,8 +77,9 @@ def login(request):
                 
                 return redirect("home")
             except:
-                messages.error(request,"Invalid")
-                return redirect("register") 
+                messages.error(request,"Invalid Password or E-mail")
+                # return render(request,"dashboard/login_signup.html",{})
+                return redirect("login")
         else:
             return render(request,"dashboard/login_signup.html",{})
     
