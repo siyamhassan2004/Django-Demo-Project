@@ -95,7 +95,7 @@
         <li><a href="{% url 'friends_req' %}">Friend Requests</a></li>
 
         <li><a href="{% url 'logout' %}">Logout</a></li>
-        <li><a href="">Hi, {{ request.session.name }} 👋</a></li>
+        <li><a href="{% url 'mypost' %}">Hi, {{ request.session.name }} 👋</a></li>
 
       {% else %}
         <li><a href="{% url 'login' %}">Login</a></li>

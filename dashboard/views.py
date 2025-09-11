@@ -9,15 +9,17 @@ def demo(request):
     posts = User_posts.objects.all().order_by('-create_at')
     users = []
     U_posts = []
+    U_ids = []
     for post in posts:
         log_user = Login_info_new_p.objects.get(email=post.u_name)
         u_name = log_user.fname + log_user.lname
         status = post.post
         U_posts.append(status)
+        U_ids.append(post.id)
         if not " " in u_name:
             u_name = log_user.fname+ " " + log_user.lname
         users.append(u_name)
-    return render(request,"dashboard/landing_page.html",{"posts": zip(users,U_posts)})
+    return render(request,"dashboard/landing_page.html",{"posts": zip(users,U_posts,U_ids)})
 
 def register(request):
     if request.session.get('user_id'):
@@ -58,7 +60,7 @@ def profile(request):
         (f"{log_user.fname} {log_user.lname}", post.post)
         for post in posts
     ]
-    return render(request, "dashboard/landing_page.html", {"posts": post_data})
+    return render(request, "dashboard/profile.html", {"posts": post_data})
 
 def login(request):
     if request.session.get('user_id'):
@@ -99,7 +101,18 @@ def add_post(request):
         form = UserPostsForm()
     return HttpResponse("Post Was not Added.")
 
-def add_comment(request):
-    # return HttpResponse("Comment Added Successfully.")
-    return redirect("mypost")
-
+def add_comment(request, post_id):
+    post = User_posts.objects.get(id=post_id)
+    comments = post.comments.all().order_by("-created_at")
+    if request.method == "POST":
+        comment_text = request.POST.get("comment")
+        if comment_text:
+            user_email = request.session.get('email')
+            if user_email:
+                user = Login_info_new_p.objects.get(email=user_email)
+                new_comment = User_comment(post=post, user=user, comment=comment_text)
+                new_comment.save()
+                return redirect("add_comment", post_id=post_id)
+            else:
+                return redirect("login")
+    return render(request, "dashboard/comment.html", {"post": post, "comments": comments})

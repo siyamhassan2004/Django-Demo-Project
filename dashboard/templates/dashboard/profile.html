@@ -190,10 +190,6 @@
   transition: background .2s ease;
 }
 .actions button:hover { background: #dfe3ee; }
-a{
-  text-decoration: none;
-  color: inherit;
-}
 </style>
 {% endblock %}
 
@@ -215,22 +211,18 @@ a{
 
   <!-- Grid of posts -->
   <div class="feed-grid">
-    {% for name, post, id in posts %}
+    {% for name, post in posts %}
       <div class="post-card">
         <h3 class="username">{{post}}</h3>
         <p class="content">{{ name }}</p>
         <div class="actions">
           <button class="like-btn">👍 Like</button>
-          <button class="comment-btn"><a href="{% url 'add_comment' id %}">💬 Comment</a></button>
+          <button class="comment-btn">💬 Comment</button>
         </div>
       </div>
     {% endfor %}
   </div>
 
 </div>
-
-<script>
-
-</script>
 
 {% include "dashboard/footer.html" %}
