@@ -1,0 +1,69 @@
+{% include "dashboard/header.html" %}
+{% block extra_css %}
+<style>
+        .page {
+        max-width: 1200px;
+        margin: 2rem auto;
+        padding: 0 16px;
+    }
+
+    /* Card style */
+    .card {
+        background: #e0e5ec;
+        padding: 1.2rem 1.4rem;
+        border-radius: 18px;
+        box-shadow: 10px 10px 30px #bec3c9, -10px -10px 30px #ffffff;
+    }
+
+    /* Composer */
+    .composer {
+        margin: 0 auto 2rem auto;
+        max-width: 700px;
+    }
+
+    .composer label {
+        font-weight: 600;
+    }
+
+    .composer input {
+        width: 100%;
+        padding: 0.8rem 1rem;
+        border-radius: 12px;
+        border: none;
+        background: #e0e5ec;
+        box-shadow: inset 3px 3px 6px #bec3c9, inset -3px -3px 6px #ffffff;
+        font-size: 15px;
+    }
+
+    .action-btn {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border: none;
+        margin-top: 0.7rem;
+        border-radius: 12px;
+        background: #e0e5ec;
+        box-shadow: 5px 5px 10px #bec3c9, -5px -5px 10px #ffffff;
+        font-weight: 700;
+        cursor: pointer;
+    }
+ 
+    .action-btn i {
+        margin-right: 6px;
+    }
+</style>
+{% endblock %}
+<div class="page">
+    <!-- Composer -->
+    <form id="edit_postForm" method="post" action="{% url 'edit_comment' comment.id %}" class="card composer">
+        {% csrf_token %}
+        <div class="input-group">
+            <label>What's on your mind?</label>
+            <input type="text" name="comment" value="{{ comment.comment }}" required />
+        </div>
+        <button type="submit" class="action-btn">
+            Save
+        </button>
+    </form>
+    
+</div>
+{% include "dashboard/footer.html" %}

@@ -83,6 +83,22 @@
     .form button:hover {
         box-shadow: inset 3px 3px 8px #bfbfbf, inset -3px -3px 8px #ffffff;
     }
+    a{
+        text-decoration: none;
+        margin-right: 0.5rem;
+        font-size: 0.9rem;
+    }
+    .edit-btn {
+        color: #4a90e2;
+    }
+    .delete-btn {
+        background: none;
+        border: none;
+        color: #e94e4e;
+        cursor: pointer;
+        font-size: 0.9rem;
+        padding: 0;
+    }
 </style>
 {% endblock %}
 
@@ -100,10 +116,19 @@
     <div class="post-card">
         <h3 class="content">{{ comment.comment }}</h3>
         <p class="username">{{ comment.user }}</p>
+
+        {% if comment.user.email == request.session.email %}
+        <a class="edit-btn" href="{% url 'edit_comment' comment.id %}">✏️ Edit</a>
+        <form method="POST" action="{% url 'delete_comment' comment.id %}" style="display:inline;">
+            {% csrf_token %}
+            <button type="submit" class="delete-btn">🗑️ Delete</button>
+        </form>
+        {% endif %}
     </div>
     {% empty %}
     <p class="content">No comments yet. Be the first to comment!</p>
     {% endfor %}
+
 
 </div>
 
