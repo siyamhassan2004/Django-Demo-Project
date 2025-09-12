@@ -128,7 +128,7 @@
       <div class="actions">
         <button class="like-btn">👍 Like</button>
         <a class="comment-btn" href="{% url 'add_comment' %}">💬 Comment</a>
-      </div>
+      </div> 
     </div>
     {% endfor %}
   </div>
@@ -290,14 +290,14 @@
 
   <!-- Grid of posts -->
   <div class="feed-grid">
-    {% for name, post, id, likes in posts %}
+    {% for name, post, id, likes, comments in posts %}
     <div class="post-card">
       <h3 class="username">{{ post }}</h3>
       <p class="content">{{ name }}</p>
       <div class="actions">
         <button class="like-btn" data-id="{{ id }}">👍 Like {{ likes }}</button>
         <button class="comment-btn">
-          <a href="{% url 'add_comment' id %}">💬 Comment</a>
+          <a href="{% url 'add_comment' id %}">💬 Comment {{ comments }}</a>
         </button>
       </div>
     </div>

@@ -17,7 +17,8 @@ def demo(request):
     U_posts = []
     U_ids = []
     likes_list = []
-
+    comment_list = []
+    
     for post in posts:
         # get user full name
         log_user = Login_info_new_p.objects.get(email=post.u_name)
@@ -31,9 +32,13 @@ def demo(request):
         # count likes for this post
         likes_count = Like.objects.filter(post=post).count()
         likes_list.append(likes_count)
+        
+        # get comments for this post
+        comments = User_comment.objects.filter(post=post).count()
+        comment_list.append(comments)
 
     # pass everything as zipped lists
-    return render(request, "dashboard/landing_page.html", {"posts": zip(users, U_posts, U_ids, likes_list)})
+    return render(request, "dashboard/landing_page.html", {"posts": zip(users, U_posts, U_ids, likes_list, comment_list)})
 
 
 def register(request):
