@@ -33,3 +33,12 @@ class User_comment(models.Model):
 
     def __str__(self):
         return str(self.comment)
+    
+class Like(models.Model):
+    id = models.AutoField(primary_key=True)
+    post = models.ForeignKey(User_posts, on_delete=models.CASCADE, related_name="like")
+    user = models.ForeignKey(Login_info_new_p, on_delete=models.CASCADE, related_name="like")
+    done_at = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self):
+        return f"Like by {self.user} on {self.post}"

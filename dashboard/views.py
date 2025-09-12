@@ -1,10 +1,14 @@
 from django.shortcuts import render,redirect
 from django.http import HttpResponse
-from .models import Login_info_new_p,User_posts,User_comment
+from .models import Login_info_new_p,User_posts,User_comment,Like
 from django.contrib import messages
 from django.contrib.auth import logout
 from .forms import UserPostsForm
 from django.shortcuts import render, get_object_or_404
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
+import json
 
 # Create your views here.
 def demo(request):
@@ -12,16 +16,25 @@ def demo(request):
     users = []
     U_posts = []
     U_ids = []
+    likes_list = []
+
     for post in posts:
+        # get user full name
         log_user = Login_info_new_p.objects.get(email=post.u_name)
-        u_name = log_user.fname + log_user.lname
-        status = post.post
-        U_posts.append(status)
-        U_ids.append(post.id)
-        if not " " in u_name:
-            u_name = log_user.fname+ " " + log_user.lname
+        u_name = log_user.fname + " " + log_user.lname
         users.append(u_name)
-    return render(request,"dashboard/landing_page.html",{"posts": zip(users,U_posts,U_ids)})
+
+        # store post info
+        U_posts.append(post.post)
+        U_ids.append(post.id)
+
+        # count likes for this post
+        likes_count = Like.objects.filter(post=post).count()
+        likes_list.append(likes_count)
+
+    # pass everything as zipped lists
+    return render(request, "dashboard/landing_page.html", {"posts": zip(users, U_posts, U_ids, likes_list)})
+
 
 def register(request):
     if request.session.get('user_id'):
@@ -121,3 +134,31 @@ def add_comment(request, post_id):
             else:
                 return redirect("login")
     return render(request, "dashboard/comment.html", {"post": post, "comments": comments})
+
+@require_POST
+@csrf_exempt   # remove this if you already send CSRF via JS (recommended to keep CSRF)
+def add_like(request):
+    try:
+        data = json.loads(request.body.decode("utf-8"))
+        post_id = data.get("post_id")
+        user_id = request.session.get("user_id")  # assuming you store user_id in session after login
+
+        if not user_id:
+            return JsonResponse({"success": False, "error": "User not logged in"}, status=403)
+
+        post = User_posts.objects.get(id=post_id)
+        user = Login_info_new_p.objects.get(id=user_id)
+
+        # toggle like (if already liked, remove; else create)
+        like, created = Like.objects.get_or_create(post=post, user=user)
+
+        if not created:
+            like.delete()
+            return JsonResponse({"success": True, "liked": False, "likes_count": post.likes.count()})
+        else:
+            return JsonResponse({"success": True, "liked": True, "likes_count": post.likes.count()})
+
+    except User_posts.DoesNotExist:
+        return JsonResponse({"success": False, "error": "Post not found"}, status=404)
+    except Exception as e:
+        return JsonResponse({"success": False, "error": str(e)}, status=500)

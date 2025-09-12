@@ -10,6 +10,6 @@ urlpatterns = [
     path('register/',views.register,name="register"),
     path('add_post/',views.add_post,name="add_post"),
     path('add_comment/<int:post_id>/', views.add_comment, name="add_comment"),
-
+    path('add_like/', views.add_like, name="add_like"),
 
 ]
